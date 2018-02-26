@@ -2,6 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { relative } from 'path';
 
+const propTypes = {
+  snapMagnet: PropTypes.number,
+  speed: PropTypes.number,
+  frontZone: PropTypes.number,
+  rearZone: PropTypes.number,
+}
+
+const defaultProps = {
+  snapMagnet: 10,
+  speed: 0.5,
+  frontZone: 100,
+  rearZone: 100,
+}
 export default class Slider extends React.Component {
   constructor(props) {
     super(props);
@@ -17,10 +30,11 @@ export default class Slider extends React.Component {
       thumbRadius: 30,
       color: '#a9d601',
       snap: [0, 12.5, 25, 37.5, 50, 62.5, 75, 87.5, 100],
-      snapMagnet: 10,
+      // snapMagnet: 10,
       speed: 0.5,
       frontZone: 100,
       rearZone: 100,
+      ...props,
     };
 
     this.trackStyle = {
@@ -78,7 +92,7 @@ export default class Slider extends React.Component {
 
   snap = px => {
     const snapPoints = this.snapPX.filter(
-      val => Math.abs(val - px) <= this.settings.snapMagnet
+      val => Math.abs(val - px) <= this.props.snapMagnet
     );
     return snapPoints.length ? snapPoints[0] : px;
   };
@@ -129,7 +143,7 @@ export default class Slider extends React.Component {
         this.track.getBoundingClientRect().left;
       this.direction = Math.sign(px - this.followPX) || this.direction;
       this.followPX = px;
-      if (Math.abs(px - this.state.valuePX) < 0.1) {
+      if (Math.abs(px - this.state.valuePX) < 0.1 || !this.thumbPoint || !this.track) {
         clearInterval(this.followID);
         this.followID = null;
       }
@@ -151,7 +165,7 @@ export default class Slider extends React.Component {
   };
 
   calcThumbTransition = dist => {
-    const tm = dist / this.settings.speed;
+    const tm = dist / this.props.speed;
     return `left ${tm}ms ease-out`;
   };
 
@@ -177,11 +191,11 @@ export default class Slider extends React.Component {
     if (pointPos === valPX) return 1;
     if (direction === null) return 0;
     const dist = (pointPos - valPX) * direction;
-    if (dist > 0 && dist < this.settings.frontZone) {
-      return 1 - dist / this.settings.frontZone;
+    if (dist > 0 && dist < this.props.frontZone) {
+      return 1 - dist / this.props.frontZone;
     }
-    if (dist < 0 && dist > -this.settings.rearZone) {
-      return 1 + dist / this.settings.frontZone;
+    if (dist < 0 && dist > -this.props.rearZone) {
+      return 1 + dist / this.props.rearZone;
     }
     if (dist === 0) return 1;
     return 0;
@@ -235,10 +249,12 @@ export default class Slider extends React.Component {
           with: 600,
           height: 150,
           padding: 50,
-          backgroundColor: 'rgba(0,0,0,0.1)',
+          backgroundColor: 'rgba(0,0,0,0)',
+          cursor: 'pointer',
         }}
         onClick={this.trackClick}
       >
+
         <div
           name="track"
           ref={ref => {
@@ -301,3 +317,6 @@ export default class Slider extends React.Component {
     );
   }
 }
+
+Slider.propTypes = propTypes;
+Slider.defaultProps = defaultProps;
