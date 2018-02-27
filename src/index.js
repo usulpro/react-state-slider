@@ -45,15 +45,17 @@ const defaultBottom = (nFactor, trackWidth) => {
 const createPoint = ({
   ind,
   total = 9,
-  top = defaultTop,
-  bottom = defaultBottom,
+  top = defaultTop ,
+  bottom = defaultBottom ,
 }) => {
   return {
     snap: ind * 100 / (total - 1),
-    renderTop: (nFactor, trackWidth) => top(nFactor, trackWidth),
-    renderBottom: (nFactor, trackWidth) => bottom(nFactor, trackWidth),
+    renderTop: top,
+    renderBottom: bottom,
   };
 };
+
+export { createPoint };
 
 const propTypes = {
   snapMagnet: PropTypes.number,
@@ -68,6 +70,7 @@ const propTypes = {
     })
   ),
   initPos: PropTypes.number,
+  debug: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -75,10 +78,11 @@ const defaultProps = {
   speed: 1.5,
   frontZone: 10,
   rearZone: 10,
-  points: new Array(9)
+  points: new Array(18)
     .fill(0)
     .map((v, ind, arr) => createPoint({ ind, total: arr.length })),
   initPos: 4,
+  debug: false,
 };
 
 const textStyle = {
@@ -175,7 +179,7 @@ export default class Slider extends React.Component {
     this.trackWidth = null;
     this.snapPX = [];
     this.transition = false;
-    this.direction = null;
+    this.direction = 1;
     this.followID = null;
     this.followPX = null;
     this.frontZonePX = null;
@@ -213,7 +217,10 @@ export default class Slider extends React.Component {
     return { valuePC: leftPX * 100 / this.trackWidth, valuePX: leftPX };
   };
 
-  onResize = () => {
+  onResize = (
+    frontZone = this.props.frontZone,
+    rearZonePX = this.props.rearZone
+  ) => {
     const { left, right } = this.track.getBoundingClientRect();
     this.trackWidth = right - left;
     this.snapPX = this.settings.snap.map(val => val * this.trackWidth / 100);
@@ -316,6 +323,10 @@ export default class Slider extends React.Component {
     window.removeEventListener('resize', this.onResize);
   }
 
+  componentWillReceiveProps({ frontZone, rearZonePX }) {
+    this.onResize(frontZone, rearZonePX);
+  }
+
   calcPointHeight = (pointPos, valPX, direction) => {
     if (pointPos === valPX) return 1;
     if (direction === null) return 0;
@@ -330,13 +341,13 @@ export default class Slider extends React.Component {
     return 0;
   };
 
-  renderPoint = (posPC, valPX) => {
-    const posPX = this.recalc(posPC);
+  renderPoint = (point, valPX) => {
+    const posPX = this.recalc(point.snap);
     const nFactor = this.calcPointHeight(posPX, valPX, this.direction);
 
     return (
       <div
-        key={posPC}
+        key={point.snap}
         style={{
           position: 'absolute',
           left: posPX,
@@ -345,8 +356,23 @@ export default class Slider extends React.Component {
           overflow: 'visible',
         }}
       >
-        {defaultTop(nFactor, this.trackWidth)}
-        {defaultBottom(nFactor, this.trackWidth)}
+        {point.renderTop(nFactor, this.trackWidth)}
+        {point.renderBottom(nFactor, this.trackWidth)}
+        {this.props.debug && (
+          <div
+            style={{ width: 100, fontSize: 12, top: 200, position: 'relative' }}
+          >
+            {`nFactor: ${Math.round(nFactor * 100) / 100},`} <br />
+            {`front: ${this.frontZonePX},`}
+            <br />
+            {`rear: ${this.rearZonePX}`}
+            <br />
+            {`direction: ${this.direction}`}
+            <br />
+            {`followID: ${this.followID}`}
+            <br />
+          </div>
+        )}
       </div>
     );
   };
@@ -423,7 +449,7 @@ export default class Slider extends React.Component {
           }}
         >
           {this.props.points.map(point =>
-            this.renderPoint(point.snap, leftFactor)
+            this.renderPoint(point, leftFactor)
           )}
         </div>
       </div>

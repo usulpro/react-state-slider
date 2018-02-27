@@ -1,7 +1,8 @@
 {
-  "name": "sm-slider",
-  "version": "0.1.0",
-  "private": true,
+  "name": "react-state-slider",
+  "description": "React UI Component with smooth responsive behavior",
+  "version": "0.2.0",
+  "main": "dist/index",
   "dependencies": {
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
@@ -10,6 +11,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "prepublish": "node .scripts/prepublish.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
@@ -18,12 +20,30 @@
     "deploy": "storybook-to-ghpages"
   },
   "devDependencies": {
-    "@storybook/storybook-deployer": "^2.3.0",
     "@storybook/addon-actions": "^3.3.14",
     "@storybook/addon-knobs": "^3.3.14",
     "@storybook/addon-links": "^3.3.14",
     "@storybook/addons": "^3.3.14",
     "@storybook/react": "^3.3.14",
-    "babel-core": "^6.26.0"
+    "@storybook/storybook-deployer": "^2.3.0",
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-transform-md-import-to-string": "^1.0.6",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "chalk": "^2.3.1"
+  },
+  "peerDependencies": {
+    "prop-types": "*",
+    "react": "*"
+  },
+  "homepage": "https://github.com/storybooks/storybook-addon-console",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UsulPro/slider.git"
   }
 }
