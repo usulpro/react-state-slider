@@ -14,8 +14,8 @@ storiesOf('Slider', module)
     <Slider
       snapMagnet={number('snapMagnet', 30)}
       speed={number('speed', 0.75)}
-      frontZone={number('frontZone', 10)}
-      rearZone={number('rearZone', 10)}
+      frontZone={number('frontZone %', 10)}
+      rearZone={number('rearZone %', 10)}
     />
   </div>
 ));
