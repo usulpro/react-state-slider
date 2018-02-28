@@ -59,6 +59,9 @@ const bottomFn = (nFactor, trackWidth) => {
 
 storiesOf('Responsive Slider', module)
   .addDecorator(withKnobs)
+  .addDecorator(storyFn => (<div style={{padding: 100}}>
+    {storyFn()}
+  </div>))
   .add('Slider x9', () => (
     <div>
       <Slider

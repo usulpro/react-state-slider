@@ -78,7 +78,7 @@ const defaultProps = {
   speed: 1.5,
   frontZone: 10,
   rearZone: 10,
-  points: new Array(18)
+  points: new Array(9)
     .fill(0)
     .map((v, ind, arr) => createPoint({ ind, total: arr.length })),
   initPos: 4,
@@ -137,7 +137,7 @@ export default class Slider extends React.Component {
       overflow: 'visible',
       cursor: 'pointer',
       position: 'relative',
-      top: 100,
+      top: 0,
     };
 
     this.trackActiveStyle = {
@@ -182,6 +182,7 @@ export default class Slider extends React.Component {
     this.direction = 1;
     this.followID = null;
     this.followPX = null;
+    this.wasClick = false;
     this.frontZonePX = null;
     this.rearZonePX = null;
   }
@@ -243,44 +244,85 @@ export default class Slider extends React.Component {
       Math.sign(val.valuePX - this.state.valuePX) || this.direction;
     this.setState({ ...val });
 
-    // console.log(this.direction, val.valuePX);
+    // console.log(this.direction, val);
   };
 
   onMouseUp = event => {
     event.stopPropagation();
     event.preventDefault();
+
     window.removeEventListener('mousemove', this.onMouseMove);
     window.removeEventListener('mouseup', this.onMouseUp);
+    this.finishDrag(event.clientX);
   };
 
   onMouseDown = event => {
     event.stopPropagation();
     event.preventDefault();
-    window.addEventListener('mousemove', this.onMouseMove);
-    window.addEventListener('mouseup', this.onMouseUp);
 
-    const currentPX = this.thumbPoint.getBoundingClientRect().left;
+    // const currentPX = this.thumbPoint.getBoundingClientRect().left;
     this.startPX = event.clientX - this.state.valuePX;
     this.transition = false;
+
+    window.addEventListener('mousemove', this.onMouseMove);
+    window.addEventListener('mouseup', this.onMouseUp);
+    // console.log('mouseDown. startPX: ', this.startPX)
   };
 
   onTouchStart = event => {
+    event.stopPropagation();
     event.preventDefault();
-    // console.log(event);
+
+    this.startPX = event.touches[0].screenX - this.state.valuePX;
+    this.transition = false;
+
+    this.thumbVision.addEventListener('touchmove', this.onTouchMove);
+    this.thumbVision.addEventListener('touchend', this.onTouchEnd);
+
+    // console.log('tStart', event.touches[0].screenX);
   };
+
+  onTouchMove = event => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const x = event.touches[0].screenX - this.startPX;
+    const val = this.calcLeft(x);
+
+    this.direction =
+      Math.sign(val.valuePX - this.state.valuePX) || this.direction;
+    this.setState({ ...val });
+
+    // console.log('tMove', event.touches[0].screenX);
+  };
+
+  onTouchEnd = event => {
+    this.thumbVision.removeEventListener('touchmove', this.onTouchMove);
+    this.thumbVision.removeEventListener('touchend', this.onTouchEnd);
+
+    // console.log('tEnd', event);
+    this.finishDrag(event.changedTouches[0].clientX);
+  };
+
+  finishDrag = (x) => {
+    // console.log('finishDrag', x);
+    this.trackClick({clientX: x})
+  }
+
 
   followTrans = () => {
     this.followID = setInterval(() => {
-      if (!this.thumbPoint || !this.track) return;
       // console.log('following')
+      if (!this.thumbPoint || !this.track) return;
       const px =
         this.thumbPoint.getBoundingClientRect().left -
         this.track.getBoundingClientRect().left;
       this.direction = Math.sign(px - this.followPX) || this.direction;
       this.followPX = px;
-      if (Math.abs(px - this.state.valuePX) < 0.1) {
+      if (Math.abs(px - this.state.valuePX) < 0.1 || !this.wasClick) {
         clearInterval(this.followID);
         this.followID = null;
+        this.wasClick = false;
       }
       this.setState({
         valueTr: this.followPX,
@@ -289,6 +331,9 @@ export default class Slider extends React.Component {
   };
 
   trackClick = event => {
+    // console.log('>> Click <<');
+    if (this.wasClick) return;
+    this.wasClick = true;
     const x = event.clientX - this.track.getBoundingClientRect().left;
     const val = this.calcLeft(x, this.absSnap);
     this.transition = true;
@@ -296,6 +341,7 @@ export default class Slider extends React.Component {
       Math.abs(val.valuePX - this.state.valuePX)
     );
     this.followTrans();
+    // console.log(x, val);
     this.setState({ ...val });
   };
 
@@ -308,6 +354,7 @@ export default class Slider extends React.Component {
     this.thumbVision.addEventListener('mousedown', this.onMouseDown);
     this.thumbVision.addEventListener('touchstart', this.onTouchStart);
 
+
     window.addEventListener('resize', this.onResize);
 
     this.setState({
@@ -318,7 +365,8 @@ export default class Slider extends React.Component {
   }
 
   componentWillUnmount() {
-    this.thumbPoint.removeEventListener('mousedown', this.onMouseDown);
+    this.thumbVision.removeEventListener('mousedown', this.onMouseDown);
+    this.thumbVision.removeEventListener('touchstart', this.onTouchStart);
     window.removeEventListener('mousemove', this.onMouseMove);
     window.removeEventListener('resize', this.onResize);
   }
@@ -346,10 +394,11 @@ export default class Slider extends React.Component {
     const nFactor = this.calcPointHeight(posPX, valPX, this.direction);
 
     return (
-      <div
+      <div name="snap-point"
         key={point.snap}
         style={{
           position: 'absolute',
+          top: 0,
           left: posPX,
           height: 20,
           width: 0,
@@ -384,8 +433,8 @@ export default class Slider extends React.Component {
         name="slider"
         style={{
           with: 600,
-          height: 150,
-          padding: 50,
+          height: 130,
+          paddingTop: 30,
           backgroundColor: 'rgba(0,0,0,0)',
           cursor: 'pointer',
         }}
@@ -397,7 +446,7 @@ export default class Slider extends React.Component {
           ref={ref => {
             this.track = ref;
           }}
-          onClick={this.trackClick}
+          // onClick={this.trackClick}
           style={this.trackStyle}
         >
           <div
@@ -440,12 +489,12 @@ export default class Slider extends React.Component {
             }}
           />
         </div>
-        <div
+        <div name="snaps-holder"
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             position: 'relative',
-            top: 100,
+            // top: 100,
           }}
         >
           {this.props.points.map(point =>
