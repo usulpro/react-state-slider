@@ -332,6 +332,9 @@ export default class Slider extends React.Component {
 
   trackClick = event => {
     // console.log('>> Click <<');
+    event.stopPropagation();
+    event.preventDefault();
+
     if (this.wasClick) return;
     this.wasClick = true;
     const x = event.clientX - this.track.getBoundingClientRect().left;
@@ -343,6 +346,7 @@ export default class Slider extends React.Component {
     this.followTrans();
     // console.log(x, val);
     this.setState({ ...val });
+    return false
   };
 
   calcThumbTransition = dist => {
@@ -435,11 +439,10 @@ export default class Slider extends React.Component {
           with: 600,
           height: 130,
           paddingTop: 30,
-          backgroundColor: 'rgba(0,0,0,0)',
+          backgroundColor: 'rgba(255,255,255,1)',
           cursor: 'pointer',
         }}
         onClick={this.trackClick}
-        onTouchStart={ev => ev.stopPropagation()}
       >
         <div
           name="track"
