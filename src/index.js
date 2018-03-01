@@ -70,6 +70,8 @@ const propTypes = {
     })
   ),
   initPos: PropTypes.number,
+  onChange: PropTypes.func,
+  onDrag: PropTypes.func,
   debug: PropTypes.bool,
 };
 
@@ -82,6 +84,8 @@ const defaultProps = {
     .fill(0)
     .map((v, ind, arr) => createPoint({ ind, total: arr.length })),
   initPos: 4,
+  onChange: () => {},
+  onDrag: () => {},
   debug: false,
 };
 
@@ -231,6 +235,7 @@ export default class Slider extends React.Component {
     this.setState({
       valuePX: this.recalc(this.state.valuePC),
     });
+    this.onChange();
   };
 
   onMouseMove = event => {
@@ -248,7 +253,6 @@ export default class Slider extends React.Component {
   };
 
   onMouseUp = event => {
-    event.stopPropagation();
     event.preventDefault();
 
     window.removeEventListener('mousemove', this.onMouseMove);
@@ -257,7 +261,6 @@ export default class Slider extends React.Component {
   };
 
   onMouseDown = event => {
-    event.stopPropagation();
     event.preventDefault();
 
     // const currentPX = this.thumbPoint.getBoundingClientRect().left;
@@ -270,7 +273,6 @@ export default class Slider extends React.Component {
   };
 
   onTouchStart = event => {
-    event.stopPropagation();
     event.preventDefault();
 
     this.startPX = event.touches[0].screenX - this.state.valuePX;
@@ -283,7 +285,6 @@ export default class Slider extends React.Component {
   };
 
   onTouchMove = event => {
-    event.stopPropagation();
     event.preventDefault();
 
     const x = event.touches[0].screenX - this.startPX;
@@ -309,6 +310,16 @@ export default class Slider extends React.Component {
     this.trackClick({clientX: x})
   }
 
+  onChange = () => {
+    const ind = this.props.points.findIndex(point => Math.abs(point.snap - this.state.valuePC) < 0.01 );
+    this.props.onChange({
+      trackWidth: this.trackWidth,
+      ...this.state,
+      ind,
+    });
+    // console.log('STOP', ind);
+  }
+
 
   followTrans = () => {
     this.followID = setInterval(() => {
@@ -323,6 +334,7 @@ export default class Slider extends React.Component {
         clearInterval(this.followID);
         this.followID = null;
         this.wasClick = false;
+        this.onChange();
       }
       this.setState({
         valueTr: this.followPX,
@@ -332,8 +344,8 @@ export default class Slider extends React.Component {
 
   trackClick = event => {
     // console.log('>> Click <<');
-    event.stopPropagation();
-    event.preventDefault();
+    // event.stopPropagation();
+    // event.preventDefault();
 
     if (this.wasClick) return;
     this.wasClick = true;

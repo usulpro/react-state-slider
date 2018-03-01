@@ -57,6 +57,8 @@ const bottomFn = (nFactor, trackWidth) => {
   );
 };
 
+const onChange = data => console.log(data);
+
 storiesOf('Responsive Slider', module)
   .addDecorator(withKnobs)
   .addDecorator(storyFn => (<div style={{padding: 100}}>
@@ -72,6 +74,7 @@ storiesOf('Responsive Slider', module)
         points={new Array(9)
           .fill(0)
           .map((v, ind, arr) => createPoint({ ind, total: arr.length }))}
+        onChange={onChange}
         debug
       />
     </div>
@@ -86,6 +89,7 @@ storiesOf('Responsive Slider', module)
         points={new Array(18)
           .fill(0)
           .map((v, ind, arr) => createPoint({ ind, total: arr.length }))}
+        onChange={onChange}
       />
     </div>
   ))
@@ -99,6 +103,7 @@ storiesOf('Responsive Slider', module)
         points={new Array(11)
           .fill(0)
           .map((v, ind, arr) => createPoint({ ind, total: arr.length, top: topFn, bottom: bottomFn }))}
+        onChange={onChange}
         debug
       />
     </div>
