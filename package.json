@@ -1,13 +1,11 @@
 {
   "name": "react-state-slider",
   "description": "React UI Component with smooth responsive behavior",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "main": "dist/index",
   "dependencies": {
-    "prop-types": "^15.6.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-scripts": "1.1.1"
+
+
   },
   "scripts": {
     "prepare": "node .scripts/prepublish.js",
@@ -17,6 +15,10 @@
     "deploy": "storybook-to-ghpages"
   },
   "devDependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.1.1",
+    "prop-types": "^15.6.0",
     "@storybook/addon-actions": "^3.3.14",
     "@storybook/addon-console": "^1.0.0",
     "@storybook/addon-knobs": "^3.3.14",
