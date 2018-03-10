@@ -4,6 +4,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { linkTo } from '@storybook/addon-links';
 import { withKnobs, text, boolean, number } from '@storybook/addon-knobs/react';
+import '@storybook/addon-console';
 
 import Slider, { createPoint } from '../';
 
@@ -52,18 +53,16 @@ const bottomFn = (nFactor, trackWidth) => {
         // color: '#ff0202',
       }}
     >
-      { nFactor > 0.9 ? '⚑' : '⚐'}
+      {nFactor > 0.9 ? '⚑' : '⚐'}
     </div>
   );
 };
 
-const onChange = data => console.log(data);
+const onChange = data => console.log('onChange', data);
 
 storiesOf('Responsive Slider', module)
   .addDecorator(withKnobs)
-  .addDecorator(storyFn => (<div style={{padding: 100}}>
-    {storyFn()}
-  </div>))
+  .addDecorator(storyFn => <div style={{ padding: 100 }}>{storyFn()}</div>)
   .add('Slider x9', () => (
     <div>
       <Slider
@@ -102,7 +101,14 @@ storiesOf('Responsive Slider', module)
         rearZone={number('rearZone %', 20)}
         points={new Array(11)
           .fill(0)
-          .map((v, ind, arr) => createPoint({ ind, total: arr.length, top: topFn, bottom: bottomFn }))}
+          .map((v, ind, arr) =>
+            createPoint({
+              ind,
+              total: arr.length,
+              top: topFn,
+              bottom: bottomFn,
+            })
+          )}
         onChange={onChange}
         debug
       />

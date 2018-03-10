@@ -448,7 +448,6 @@ export default class Slider extends React.Component {
       <div
         name="slider"
         style={{
-          with: 600,
           height: 130,
           paddingTop: 30,
           backgroundColor: 'rgba(255,255,255,1)',
@@ -461,7 +460,6 @@ export default class Slider extends React.Component {
           ref={ref => {
             this.track = ref;
           }}
-          // onClick={this.trackClick}
           style={this.trackStyle}
         >
           <div
@@ -524,12 +522,3 @@ export default class Slider extends React.Component {
 Slider.propTypes = propTypes;
 Slider.defaultProps = defaultProps;
 
-/* {this.renderPoint(0, leftFactor)}
-          {this.renderPoint(12.5, leftFactor)}
-          {this.renderPoint(25, leftFactor)}
-          {this.renderPoint(37.5, leftFactor)}
-          {this.renderPoint(50, leftFactor)}
-          {this.renderPoint(62.5, leftFactor)}
-          {this.renderPoint(75, leftFactor)}
-          {this.renderPoint(87.5, leftFactor)}
-          {this.renderPoint(100, leftFactor)} */

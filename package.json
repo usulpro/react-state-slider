@@ -10,17 +10,15 @@
     "react-scripts": "1.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
     "prepare": "node .scripts/prepublish.js",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public",
+    "start": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "deploy": "storybook-to-ghpages"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.3.14",
+    "@storybook/addon-console": "^1.0.0",
     "@storybook/addon-knobs": "^3.3.14",
     "@storybook/addon-links": "^3.3.14",
     "@storybook/addons": "^3.3.14",
