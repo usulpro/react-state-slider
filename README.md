@@ -4,7 +4,7 @@ Responsive slider smoothly switchable between states. It's controllable by mouse
 
 Demo https://usulpro.github.io/slider/
 
-![slider](doc/slider.jpg)
+[![slider](https://github.com/UsulPro/react-state-slider/raw/master/doc/slider.jpg)](https://github.com/UsulPro/react-state-slider/raw/master/doc/slider.jpg)
 
 ## Usage
 
@@ -116,8 +116,33 @@ where state is:
 }
 ```
 
+### createPoint
+
+To create your custom states you need to pass them to the `points` prop of this Slider. You can do it manually, but in some cases it's more productive to use `createPoint` for that. It will calculate the %% for each point depending on the amount of them. You can do it the follow way:
+
+```js
+import Slider, { createPoint } from 'react-state-slider';
+
+const statesAmount = 9;
+const topFn = (nFactor, trackWidth) => { /* return Top Component */}
+const bottomFn = (nFactor, trackWidth) => { /* return Bottom Component */}
+
+<Slider
+  points={new Array(statesAmount).fill(0).map((v, ind, arr) =>
+    createPoint({
+      ind,
+      total: arr.length,
+      top: topFn,
+      bottom: bottomFn,
+    })
+  )}
+/>
+
+```
 
 ## Credits
+
+If you use this component could you kindly consider to [star](https://github.com/UsulPro/react-state-slider/stargazers) this project
 
 Created with ❤︎ to OSS by [@UsulPro](https://twitter.com/UsulPro)
 
