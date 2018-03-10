@@ -4,7 +4,12 @@
 # React State Slider
 
 
-Responsive slider smoothly switchable between states. It's controllable by mouse and touch screen
+Responsive slider smoothly switchable between states. It's controllable by mouse and touch screen.
+
+You can drag the thumb by mouse or by touch. States will interact while you dragging. As soon as you release the thumb it will jump to the nearest state.
+
+You can click or tap on the slider. And it smoothly scroll to the neareat state. During scrolling states passing by thumb will interact as well.
+
 
 Demo https://usulpro.github.io/react-state-slider
 
@@ -38,7 +43,7 @@ React State Slider is highly customizable by passing `props` to the component.
 
 ```js
 const propTypes = {
-  snapMagnet: PropTypes.number, // snaping distance arount state point
+  snapMagnet: PropTypes.number, // snaping distance around state point
   speed: PropTypes.number, // speed of the thumb when you clicking on the track
   frontZone: PropTypes.number, // The distance within which the thumb affects the state points (in %%)
   rearZone: PropTypes.number, // frontZone - when moving toward to points, rearZone - backward of points
