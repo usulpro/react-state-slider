@@ -63,6 +63,11 @@ const onChange = data => console.log('onChange', data);
 storiesOf('Responsive Slider', module)
   .addDecorator(withKnobs)
   .addDecorator(storyFn => <div style={{ padding: 100 }}>{storyFn()}</div>)
+  .add('Slider default', () => (
+    <div>
+      <Slider />
+    </div>
+  ))
   .add('Slider x9', () => (
     <div>
       <Slider
