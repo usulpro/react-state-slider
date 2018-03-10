@@ -1,8 +1,12 @@
+[![npm version](https://badge.fury.io/js/react-state-slider.svg)](https://badge.fury.io/js/react-state-slider)
+[![Live demo](https://img.shields.io/badge/Live%20Demo-%20Storybook-brightgreen.svg)](https://usulpro.github.io/react-state-slider)
+
 # React State Slider
+
 
 Responsive slider smoothly switchable between states. It's controllable by mouse and touch screen
 
-Demo https://usulpro.github.io/slider/
+Demo https://usulpro.github.io/react-state-slider
 
 [![slider](https://github.com/UsulPro/react-state-slider/raw/master/doc/slider.jpg)](https://github.com/UsulPro/react-state-slider/raw/master/doc/slider.jpg)
 
@@ -142,7 +146,7 @@ const bottomFn = (nFactor, trackWidth) => { /* return Bottom Component */}
 
 ## Credits
 
-If you use this component could you kindly consider to [star](https://github.com/UsulPro/react-state-slider/stargazers) this project
+<sub>If you use this component could you kindly consider to [star](https://github.com/UsulPro/react-state-slider/stargazers) this project</sub>
 
 Created with ❤︎ to OSS by [@UsulPro](https://twitter.com/UsulPro)
 

@@ -1,7 +1,7 @@
 {
   "name": "react-state-slider",
   "description": "React UI Component with smooth responsive behavior",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "main": "dist/index",
   "dependencies": {
     "prop-types": "^15.6.0",
