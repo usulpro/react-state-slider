@@ -99,18 +99,37 @@ storiesOf('Responsive Slider', module)
         speed={number('speed', 0.75)}
         frontZone={number('frontZone %', 20)}
         rearZone={number('rearZone %', 20)}
-        points={new Array(11)
-          .fill(0)
-          .map((v, ind, arr) =>
-            createPoint({
-              ind,
-              total: arr.length,
-              top: topFn,
-              bottom: bottomFn,
-            })
-          )}
+        points={new Array(11).fill(0).map((v, ind, arr) =>
+          createPoint({
+            ind,
+            total: arr.length,
+            top: topFn,
+            bottom: bottomFn,
+          })
+        )}
         onChange={onChange}
         debug
+      />
+    </div>
+  ))
+  .add('with custom styles', () => (
+    <div>
+      <Slider
+        points={new Array(9)
+          .fill(0)
+          .map((v, ind, arr) => createPoint({ ind, total: arr.length }))}
+        onChange={onChange}
+        styles={{
+          slider: { height: 80, marginBottom: 40, paddingTop: 40 },
+          track: { backgroundColor: '#ab7676' },
+          activeTrack: { backgroundColor: '#745c9f' },
+          thumb: {
+            backgroundColor: 'white',
+            borderLeft: '#745c9f solid 6px',
+            borderRight: '#ab7676 solid 6px',
+            width: 18,
+          },
+        }}
       />
     </div>
   ));

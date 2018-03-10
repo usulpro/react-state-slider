@@ -45,8 +45,8 @@ const defaultBottom = (nFactor, trackWidth) => {
 const createPoint = ({
   ind,
   total = 9,
-  top = defaultTop ,
-  bottom = defaultBottom ,
+  top = defaultTop,
+  bottom = defaultBottom,
 }) => {
   return {
     snap: ind * 100 / (total - 1),
@@ -72,6 +72,8 @@ const propTypes = {
   initPos: PropTypes.number,
   onChange: PropTypes.func,
   onDrag: PropTypes.func,
+  classNames: PropTypes.shape(),
+  styles: PropTypes.shape(),
   debug: PropTypes.bool,
 };
 
@@ -86,6 +88,18 @@ const defaultProps = {
   initPos: 4,
   onChange: () => {},
   onDrag: () => {},
+  classNames: {
+    slider: 'react-state-slider',
+    track: 'track',
+    activeTrack: 'active-track',
+    thumb: 'thumb',
+  },
+  styles: {
+    slider: {},
+    track: {},
+    activeTrack: {},
+    thumb: {},
+  },
   debug: false,
 };
 
@@ -305,21 +319,22 @@ export default class Slider extends React.Component {
     this.finishDrag(event.changedTouches[0].clientX);
   };
 
-  finishDrag = (x) => {
+  finishDrag = x => {
     // console.log('finishDrag', x);
-    this.trackClick({clientX: x})
-  }
+    this.trackClick({ clientX: x });
+  };
 
   onChange = () => {
-    const ind = this.props.points.findIndex(point => Math.abs(point.snap - this.state.valuePC) < 0.01 );
+    const ind = this.props.points.findIndex(
+      point => Math.abs(point.snap - this.state.valuePC) < 0.01
+    );
     this.props.onChange({
       trackWidth: this.trackWidth,
       ...this.state,
       ind,
     });
     // console.log('STOP', ind);
-  }
-
+  };
 
   followTrans = () => {
     this.followID = setInterval(() => {
@@ -358,7 +373,7 @@ export default class Slider extends React.Component {
     this.followTrans();
     // console.log(x, val);
     this.setState({ ...val });
-    return false
+    return false;
   };
 
   calcThumbTransition = dist => {
@@ -369,7 +384,6 @@ export default class Slider extends React.Component {
   componentDidMount() {
     this.thumbVision.addEventListener('mousedown', this.onMouseDown);
     this.thumbVision.addEventListener('touchstart', this.onTouchStart);
-
 
     window.addEventListener('resize', this.onResize);
 
@@ -410,7 +424,8 @@ export default class Slider extends React.Component {
     const nFactor = this.calcPointHeight(posPX, valPX, this.direction);
 
     return (
-      <div name="snap-point"
+      <div
+        name="snap-point"
         key={point.snap}
         style={{
           position: 'absolute',
@@ -446,21 +461,24 @@ export default class Slider extends React.Component {
     const leftFactor = this.followID ? this.state.valueTr : this.state.valuePX;
     return (
       <div
-        name="slider"
+        name="react-state-slider"
+        className={this.props.classNames.slider}
         style={{
           height: 130,
           paddingTop: 30,
           backgroundColor: 'rgba(255,255,255,1)',
           cursor: 'pointer',
+          ...this.props.styles.slider,
         }}
         onClick={this.trackClick}
       >
         <div
           name="track"
+          className={this.props.classNames.track}
           ref={ref => {
             this.track = ref;
           }}
-          style={this.trackStyle}
+          style={{ ...this.trackStyle, ...this.props.styles.track }}
         >
           <div
             name="thumb-point"
@@ -475,10 +493,11 @@ export default class Slider extends React.Component {
           >
             <div
               name="thumb-vision"
+              className={this.props.classNames.thumb}
               ref={ref => {
                 this.thumbVision = ref;
               }}
-              style={this.thumbStyle}
+              style={{ ...this.thumbStyle, ...this.props.styles.thumb }}
             >
               <div
                 name="thumb-area"
@@ -495,24 +514,24 @@ export default class Slider extends React.Component {
           </div>
           <div
             name="track-active"
+            className={this.props.classNames.activeTrack}
             style={{
               ...this.trackActiveStyle,
               transition: this.transition ? this.thumbTransition.width : '',
               width: `${this.state.valuePC}%`,
+              ...this.props.styles.activeTrack,
             }}
           />
         </div>
-        <div name="snaps-holder"
+        <div
+          name="snaps-holder"
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             position: 'relative',
-            // top: 100,
           }}
         >
-          {this.props.points.map(point =>
-            this.renderPoint(point, leftFactor)
-          )}
+          {this.props.points.map(point => this.renderPoint(point, leftFactor))}
         </div>
       </div>
     );
@@ -521,4 +540,3 @@ export default class Slider extends React.Component {
 
 Slider.propTypes = propTypes;
 Slider.defaultProps = defaultProps;
-
