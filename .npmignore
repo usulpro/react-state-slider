@@ -1,6 +1,7 @@
 .scripts
 .storybook
-.doc
+doc
 node_modules
 public
 src
+
